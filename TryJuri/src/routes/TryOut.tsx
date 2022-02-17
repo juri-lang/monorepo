@@ -1,18 +1,12 @@
-import { ChangeEvent, useState, useRef, useEffect, ReactNode } from 'react';
+import { ChangeEvent, useState, ReactNode } from 'react';
 import '../style/App.scss';
 import { Button, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
+
 import { Theme } from '@mui/material';
 import axios from 'axios';
-//import CodeMirror from '@codemirror';
 import Highlighter from '../util/Highlighter';
+import { CSSProperties } from 'react';
 
-const Output = styled(TextField)(() => ({
-  ".MuiInputBase-input.Mui-disabled": {
-    WebkitTextFillColor: "#FFF",
-    color: "#FFF"
-  }
-}));
 
 export default function TryOut({ theme }: { theme?: Theme }) {
   const [code, setCode] = useState('');
@@ -45,7 +39,7 @@ function Editor({ callback, autoFocus }: editorProps) {
   let [highlighted, setHighlighted] = useState(<></>);
   let [text, setText] = useState('');
   let handleChange = function (event: ChangeEvent<HTMLTextAreaElement>) {
-    if (event.target.value != text) {
+    if (event.target.value !== text) {
       setText(event.target.value);
       callback(event.target.value);
       setHighlighted(<>{highlight(event.target.value)}</>);
@@ -133,12 +127,12 @@ function DivOverlay({ elementID, children }: { elementID: string, children: Reac
     position: 'absolute',
     textAlign: 'left',
     lineHeight: '1.4375em',
-    overflowY: 'auto',
+    overflow: 'auto',
     // border: '2px solid red',
     color: 'white',
     top: 0,
     left: 0
-  });
+  } as CSSProperties);
 
   let updateStyle = function () {
     let element = document.getElementById(elementID)!;
@@ -152,12 +146,12 @@ function DivOverlay({ elementID, children }: { elementID: string, children: Reac
       maxHeight: compStyle.height,
       top: rect.top + window.scrollY,
       left: rect.left + window.scrollX
-    });
+    } as CSSProperties);
   }
 
   window.onload = updateStyle;
   window.onscroll = updateStyle;
   window.onresize = updateStyle;
 
-  return <div style={{ ...style }}>{children}</div>
+  return <div id='editor-overlay' style={style }>{children}</div>
 }

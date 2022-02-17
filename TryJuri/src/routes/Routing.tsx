@@ -1,6 +1,5 @@
 import TryOut from './TryOut';
 import { Documentation, ReadMe } from './Contents';
-import { useTheme } from '@mui/material';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -17,7 +16,7 @@ export default function Routing() {
 export const AppRoutes = {
   get routes() {
     return {
-      '/': <TryOut theme={useTheme()}/>,
+      '/': <TryOut />,
       '/documentation': Documentation,
       '/readme': ReadMe
     }
