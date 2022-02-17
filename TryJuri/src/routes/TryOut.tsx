@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, ReactNode } from 'react';
+import { ChangeEvent, useState, ReactNode, useEffect } from 'react';
 import '../style/App.scss';
 import { Button, TextField } from '@mui/material';
 import { KeyboardEvent } from 'react';
@@ -6,6 +6,7 @@ import { Theme } from '@mui/material';
 import axios from 'axios';
 import Highlighter from '../util/Highlighter';
 import { CSSProperties } from 'react';
+import internal from 'stream';
 
 
 export default function TryOut({ theme }: { theme?: Theme }) {
@@ -79,7 +80,7 @@ function Editor({ callback, autoFocus }: editorProps) {
       case 'Backspace':
         if(currentRow().match(/ {4}$/)){
           event.preventDefault();
-          t.value = t.value.slice(0,cpos-4) + t.value.slice(cpos-4);
+          t.value = t.value.slice(0,cpos-4) + t.value.slice(cpos);
           t.setSelectionRange(cpos-4, cpos-4);
         }
         break;
@@ -87,14 +88,14 @@ function Editor({ callback, autoFocus }: editorProps) {
     //t.dispatchEvent(new Event('change'));
     handleChange({target: {name: t.name, value : t.value}} as ChangeEvent<HTMLTextAreaElement>);
   }
-  window.onload = () => {
-    alert('true');
-    let editor = document.getElementById('editor') as HTMLTextAreaElement;
-    handleChange({target: {name: editor.name, value : 'test'}} as ChangeEvent<HTMLTextAreaElement>);
+  let getBoundings = function(elementID : string){
+    let rect = document.getElementById(elementID)?.getBoundingClientRect()!;
+
+    return rect? {top: rect.top, left: rect.left} : {top: 0, left : 0};
   }
   return <>
     <TextField sx={{ color: 'transparent !important' }} id='editor' placeholder='Please enter your code here.' onKeyDown={handleKeyPress} inputProps={{ spellCheck: 'false' }} autoFocus={autoFocus} multiline onChange={handleChange} margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' />
-    <DivOverlay elementID={'editor'} >{highlighted}</DivOverlay>
+    <DivOverlay elementID={'editor'} boundings={getBoundings('editor')}>{highlighted}</DivOverlay>
   </>
 }
 
@@ -117,7 +118,7 @@ function highlight(text: string) {
   return hl.highlight(text);
 }
 
-function DivOverlay({ elementID, children }: { elementID: string, children: ReactNode }) {
+function DivOverlay({ elementID, children, boundings}: { elementID: string, children: ReactNode, boundings: {top: number, left : number}}) {
   let [style, setStyle] = useState({
     width: '0',
     height: '0',
@@ -148,10 +149,26 @@ function DivOverlay({ elementID, children }: { elementID: string, children: Reac
       left: rect.left + window.scrollX
     } as CSSProperties);
   }
-
-  window.onload = updateStyle;
   window.onscroll = updateStyle;
-  window.onresize = updateStyle;
-
-  return <div id='editor-overlay' style={style }>{children}</div>
+  window.onresize = updateStyle
+  window.onload = () =>{
+    updateStyle();
+    document.getElementById(elementID)!.onresize = updateStyle;
+  }
+  let styleZ = function(){
+    let element = document.getElementById(elementID);
+    let compStyle = element && getComputedStyle(element);
+    return {
+      ...style,
+      ...(element && {
+      width: compStyle!.width,
+      maxWidth: compStyle!.width,
+      height: compStyle!.height,
+      maxHeight: compStyle!.height,
+      top: boundings.top + window.scrollY,
+      left: boundings.left + window.scrollX
+      })
+    } as CSSProperties
+  }
+  return <div style={styleZ()}>{children}</div>
 }

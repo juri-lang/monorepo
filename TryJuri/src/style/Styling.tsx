@@ -32,6 +32,9 @@ const theme = createTheme({
           disabled: '#c8c8c8',
         },
       },
+      typography: {
+        fontFamily: 'JetBrains Mono Regular'
+      },
       components: {
         MuiInputBase: {
           styleOverrides:{
