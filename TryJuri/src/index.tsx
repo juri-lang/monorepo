@@ -1,12 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.scss';
-import App from './App';
+import './style/index.scss';
+import { ThemeProvider } from '@mui/material';
+
+import Navigation from './components/Navigation';
+import Routing from './routes/Routing';
 import reportWebVitals from './reportWebVitals';
+
+
+import { globalStyling, theme } from './style/Styling'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+
+    <ThemeProvider theme={theme}>
+      {globalStyling}
+      <Navigation>
+        <Routing />
+      </Navigation>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

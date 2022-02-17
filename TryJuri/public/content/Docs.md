@@ -1,0 +1,3 @@
+# Documentation with Markdown in React!
+* Benefits of using React... but...
+* Write layout in Markdown!
