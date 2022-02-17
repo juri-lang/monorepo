@@ -1,7 +1,7 @@
 import { ChangeEvent, useState, ReactNode } from 'react';
 import '../style/App.scss';
 import { Button, TextField } from '@mui/material';
-
+import { KeyboardEvent } from 'react';
 import { Theme } from '@mui/material';
 import axios from 'axios';
 import Highlighter from '../util/Highlighter';
@@ -46,8 +46,8 @@ function Editor({ callback, autoFocus }: editorProps) {
     }
   }
 
-  let handleKeyPress = function (event: KeyboardEvent) {
-    let t = event.target! as HTMLTextAreaElement;
+  let handleKeyPress = function (event: KeyboardEvent<HTMLDivElement>) {
+    let t = event.target as HTMLTextAreaElement;
     let tab = '    ';
     let cpos = t.selectionStart;
     let insert = function (text: string) {
