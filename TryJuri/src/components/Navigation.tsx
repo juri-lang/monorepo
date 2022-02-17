@@ -21,7 +21,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
+
   }));
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -101,7 +102,7 @@ export default function Navigation({ children }: { children?: ReactNode }) {
             open={open}
         >
             <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} style={{color:'inherit'}}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
@@ -115,7 +116,7 @@ export default function Navigation({ children }: { children?: ReactNode }) {
         </List>
         </Drawer>
         <DrawerHeader/>
-        <Main open={open}>
+        <Main id='main' open={open}>
             {children}
         </Main>
     </>
