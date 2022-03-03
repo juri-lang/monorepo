@@ -7,17 +7,14 @@ import Highlighter from '../util/Highlighter';
 import { CSSProperties } from 'react';
 
 export default function TryOut({ theme }: { theme?: Theme }) {
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(localStorage.getItem('code') || '');
   const [output, setOutput] = useState('');
 
   let handleRun = function () {
     let encoded = btoa(code);
-        
-    return;
-    
-    /*axios.get('juri-online-compiler.herokuapp.com/api/juric/' + b64.toString(), { headers: { 'Accept': 'application/json' } })
-      .then(res => setOutput(res.data.results.map((r: DadJokesResult) => r.joke).join('\n\n')))
-      .catch(err => setOutput(err));*/
+    axios.get('https://juri-online-compiler.herokuapp.com/jurii?codeBase64=' + encoded)
+    .then(res => setOutput(res.data.standard))
+    .catch(err => setOutput(err));
 
     /*axios.get('https://icanhazdadjoke.com/search?term=' + code, { headers: { 'Accept': 'application/json' } })
       .then(res => setOutput(res.data.results.map((r: DadJokesResult) => r.joke).join('\n\n')))
