@@ -1,23 +1,29 @@
-import { ChangeEvent, useState, ReactNode, useEffect } from 'react';
+import { ChangeEvent, KeyboardEvent, SyntheticEvent, useState, ReactNode, useEffect} from 'react';
 import '../style/App.scss';
 import { Button, TextField } from '@mui/material';
-import { KeyboardEvent } from 'react';
 import { Theme } from '@mui/material';
 import axios from 'axios';
 import Highlighter from '../util/Highlighter';
 import { CSSProperties } from 'react';
-import internal from 'stream';
-
 
 export default function TryOut({ theme }: { theme?: Theme }) {
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
 
   let handleRun = function () {
-    axios.get('https://icanhazdadjoke.com/search?term=' + code, { headers: { 'Accept': 'application/json' } })
+    let encoded = btoa(code);
+        
+    return;
+    
+    /*axios.get('juri-online-compiler.herokuapp.com/api/juric/' + b64.toString(), { headers: { 'Accept': 'application/json' } })
       .then(res => setOutput(res.data.results.map((r: DadJokesResult) => r.joke).join('\n\n')))
-      .catch(err => setOutput(err));
+      .catch(err => setOutput(err));*/
+
+    /*axios.get('https://icanhazdadjoke.com/search?term=' + code, { headers: { 'Accept': 'application/json' } })
+      .then(res => setOutput(res.data.results.map((r: DadJokesResult) => r.joke).join('\n\n')))
+      .catch(err => setOutput(err));*/
   }
+
   return (
     <div className="TryOut">
       <h1 style={{ fontSize: '36pt' }}>try out juri</h1>
@@ -37,10 +43,11 @@ declare interface editorProps {
 }
 function Editor({ callback, autoFocus }: editorProps) {
   
-  let [highlighted, setHighlighted] = useState(<></>);
-  let [text, setText] = useState('');
+  let [highlighted, setHighlighted] = useState(localStorage.getItem('code') && <>{highlight(localStorage.getItem('code')!)}</>|| <></>);
+  let [text, setText] = useState(localStorage.getItem('code') || '');
   let handleChange = function (event: ChangeEvent<HTMLTextAreaElement>) {
     if (event.target.value !== text) {
+      localStorage.setItem('code', event.target.value);
       setText(event.target.value);
       callback(event.target.value);
       setHighlighted(<>{highlight(event.target.value)}</>);
@@ -88,14 +95,12 @@ function Editor({ callback, autoFocus }: editorProps) {
     //t.dispatchEvent(new Event('change'));
     handleChange({target: {name: t.name, value : t.value}} as ChangeEvent<HTMLTextAreaElement>);
   }
-  let getBoundings = function(elementID : string){
-    let rect = document.getElementById(elementID)?.getBoundingClientRect()!;
+  useEffect(() =>{
 
-    return rect? {top: rect.top, left: rect.left} : {top: 0, left : 0};
-  }
+  },[(document.getElementById('editor') as HTMLTextAreaElement)?.value]);
   return <>
-    <TextField sx={{ color: 'transparent !important' }} id='editor' placeholder='Please enter your code here.' onKeyDown={handleKeyPress} inputProps={{ spellCheck: 'false' }} autoFocus={autoFocus} multiline onChange={handleChange} margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' />
-    <DivOverlay elementID={'editor'} boundings={getBoundings('editor')}>{highlighted}</DivOverlay>
+    <TextField sx={{ color: 'transparent !important' }} id='editor' placeholder='Please enter your code here.' onKeyDown={handleKeyPress} inputProps={{ spellCheck: 'false' }} autoFocus={autoFocus} multiline onChange={handleChange} margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' value={text} />
+    <DivOverlay elementID={'editor'}>{highlighted}</DivOverlay>
   </>
 }
 
@@ -118,7 +123,7 @@ function highlight(text: string) {
   return hl.highlight(text);
 }
 
-function DivOverlay({ elementID, children, boundings}: { elementID: string, children: ReactNode, boundings: {top: number, left : number}}) {
+function DivOverlay({ elementID, children}: { elementID: string, children: ReactNode}) {
   let [style, setStyle] = useState({
     width: '0',
     height: '0',
@@ -150,25 +155,11 @@ function DivOverlay({ elementID, children, boundings}: { elementID: string, chil
     } as CSSProperties);
   }
   window.onscroll = updateStyle;
-  window.onresize = updateStyle
-  window.onload = () =>{
+  window.onresize = updateStyle;
+  window.onload = updateStyle;
+
+  useEffect(() => {
     updateStyle();
-    document.getElementById(elementID)!.onresize = updateStyle;
-  }
-  let styleZ = function(){
-    let element = document.getElementById(elementID);
-    let compStyle = element && getComputedStyle(element);
-    return {
-      ...style,
-      ...(element && {
-      width: compStyle!.width,
-      maxWidth: compStyle!.width,
-      height: compStyle!.height,
-      maxHeight: compStyle!.height,
-      top: boundings.top + window.scrollY,
-      left: boundings.left + window.scrollX
-      })
-    } as CSSProperties
-  }
-  return <div style={styleZ()}>{children}</div>
+  }, [(document.getElementById(elementID) && (getComputedStyle(document.getElementById(elementID)!).top, getComputedStyle(document.getElementById(elementID)!).left))]);
+  return <div style={style}>{children}</div>
 }
