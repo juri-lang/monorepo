@@ -1,20 +1,25 @@
 import { ChangeEvent, KeyboardEvent, SyntheticEvent, useState, ReactNode, useEffect} from 'react';
 import '../style/App.scss';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField , CircularProgress} from '@mui/material';
 import { Theme } from '@mui/material';
 import axios from 'axios';
 import Highlighter from '../util/Highlighter';
 import { CSSProperties } from 'react';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export default function TryOut({ theme }: { theme?: Theme }) {
-  const [code, setCode] = useState(localStorage.getItem('code') || '');
-  const [output, setOutput] = useState('');
+  let [code, setCode] = useState(localStorage.getItem('code') || '');
+  let [output, setOutput] = useState('');
+
+  let [loading, setLoading] = useState(false);
 
   let handleRun = function () {
     let encoded = btoa(code);
+    setLoading(true);
     axios.get('https://juri-online-compiler.herokuapp.com/jurii?codeBase64=' + encoded)
-    .then(res => setOutput(res.data.standard))
-    .catch(err => setOutput(err));
+    .then(res =>  setOutput(res.data.standard || res.data.error))
+    .catch(err => setOutput(err))
+    .finally(() => setLoading(false));
 
     /*axios.get('https://icanhazdadjoke.com/search?term=' + code, { headers: { 'Accept': 'application/json' } })
       .then(res => setOutput(res.data.results.map((r: DadJokesResult) => r.joke).join('\n\n')))
@@ -28,7 +33,8 @@ export default function TryOut({ theme }: { theme?: Theme }) {
         <Editor callback={setCode} />
         <TextField label='Output' multiline margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' value={output} disabled />
       </div>
-      <Button variant='contained' onClick={handleRun}>Run</Button>
+      <Button variant='contained' onClick={handleRun} style={{fontSize:'20px'}}>
+        {loading ? <CircularProgress size='1.7em'/> : <><PlayArrowIcon fontSize='large'/>Run</>}</Button>
     </div>
 
   );
