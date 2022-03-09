@@ -6,12 +6,13 @@ import axios from 'axios';
 import Highlighter from '../util/Highlighter';
 import { CSSProperties } from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import base64url from 'base64url';
 
 (window as any).global = window;
 // @ts-ignore
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
-import base64url from 'base64url';
+
 
 export default function TryOut({ theme }: { theme?: Theme }) {
   let [code, setCode] = useState(localStorage.getItem('code') || '');
