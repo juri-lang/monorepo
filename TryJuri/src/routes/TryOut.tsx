@@ -40,7 +40,7 @@ export default function TryOut({ theme }: { theme?: Theme }) {
 
   return (
     <div className="TryOut">
-      <h1 style={{ fontSize: '36pt' }}>try out juri</h1>
+      <h1 style={{ fontSize: '36pt' }}>try juri</h1>
       <div>
         <Editor callback={setCode} />
         <TextField label='Output' multiline margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' value={output} disabled />
