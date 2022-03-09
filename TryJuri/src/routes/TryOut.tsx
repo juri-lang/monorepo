@@ -6,6 +6,13 @@ import axios from 'axios';
 import Highlighter from '../util/Highlighter';
 import { CSSProperties } from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import base64url from 'base64url';
+
+(window as any).global = window;
+// @ts-ignore
+window.Buffer = window.Buffer || require('buffer').Buffer;
+
+
 
 export default function TryOut({ theme }: { theme?: Theme }) {
   let [code, setCode] = useState(localStorage.getItem('code') || '');
@@ -14,9 +21,14 @@ export default function TryOut({ theme }: { theme?: Theme }) {
   let [loading, setLoading] = useState(false);
 
   let handleRun = function () {
-    let encoded = btoa(code);
+    if(!code){
+      setOutput(''); 
+      return;
+    }
+    let encoded = base64url(code);
+    
     setLoading(true);
-    axios.get('https://juri-online-compiler.herokuapp.com/jurii?codeBase64=' + encoded)
+    axios.get('https://juri-online-compiler.herokuapp.com/jurii?code=' + encoded)
     .then(res =>  setOutput(res.data.standard || res.data.error))
     .catch(err => setOutput(err))
     .finally(() => setLoading(false));
