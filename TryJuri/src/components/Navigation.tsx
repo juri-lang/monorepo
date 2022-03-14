@@ -1,4 +1,4 @@
-import { Toolbar, IconButton, Typography, Drawer, Divider, List, ListItem, ListItemText } from '@mui/material';
+import { Toolbar, IconButton, Typography, Drawer, Divider, List, ListItem, ListItemText,Link } from '@mui/material';
 import {
     Menu as MenuIcon,
     ChevronLeft as ChevronLeftIcon,
@@ -84,7 +84,7 @@ export default function Navigation({ children }: { children?: ReactNode }) {
                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2, ...(open && { display: 'none' }) }} onClick={handleDrawerOpen}>
                     <MenuIcon />
                 </IconButton>
-                <Typography variant='h6' fontWeight='bold' color='inherit'>juri-lang</Typography>
+                <Typography variant='h6' fontWeight='bold' color='inherit'><Link href='/' color='inherit' underline='none'>juri-lang</Link></Typography>
 
             </Toolbar>
         </AppBar>

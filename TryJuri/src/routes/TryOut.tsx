@@ -29,7 +29,7 @@ export default function TryOut({ theme }: { theme?: Theme }) {
     
     setLoading(true);
     axios.get('https://juri-online-compiler.herokuapp.com/jurii?code=' + encoded)
-    .then(res =>  setOutput(res.data.standard || res.data.error))
+    .then(res =>  setOutput(res.data.standard + res.data.error))
     .catch(err => setOutput(err))
     .finally(() => setLoading(false));
 
