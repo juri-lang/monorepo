@@ -20,7 +20,7 @@ export default class Highlighter {
             let element = <>{token}</>;
             switch (token) {
                 case ' ':
-                    element = <>&nbsp;</>
+                    element = <>{' '}</>
                     break;
                 case '\n':
                     element = <br />;

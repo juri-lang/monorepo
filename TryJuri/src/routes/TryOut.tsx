@@ -150,11 +150,11 @@ function DivOverlay({ elementID, children}: { elementID: string, children: React
     position: 'absolute',
     textAlign: 'left',
     lineHeight: '1.4375em',
-    overflow: 'auto',
     // border: '2px solid red',
     color: 'white',
     top: 0,
-    left: 0
+    left: 0,
+    whiteSpace: 'pre-wrap'
   } as CSSProperties);
 
   let updateStyle = function () {
