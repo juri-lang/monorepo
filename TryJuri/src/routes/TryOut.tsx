@@ -88,7 +88,7 @@ function Editor({ callback, autoFocus }: editorProps) {
         break;
       case 'Enter':
         event.preventDefault();
-        let matches = currentRow().match(/( {4})+/);
+        let matches = currentRow().match(/^( {4})+/);
         let spaces = 0;
         if (matches) {
           spaces = matches[0].length;
