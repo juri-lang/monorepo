@@ -93,7 +93,7 @@ function Editor({ callback, autoFocus }: editorProps) {
         if (matches) {
           spaces = matches[0].length;
         }
-        if (currentRow().match(/^\s*(if|fun|operator)/)){
+        if (currentRow().match(/^\s*(if|fun|operator|:\w+\s*=\s*init\s+\.+\s+as\s+\w+\.*|iterate\s+.+\sas\s+.+)/)){
           spaces+=4;
         }
         insert('\n' + ' '.repeat(spaces));
@@ -121,7 +121,7 @@ function Editor({ callback, autoFocus }: editorProps) {
 
 
 function highlight(text: string) {
-  const keywords = { regex: /^(fun|repeat|operator|init|as|iterate)$/, color: 'rgb(0,200,255' };
+  const keywords = { regex: /^(fun|repeat|operator|init|as|iterate|return|break)$/, color: 'rgb(0,200,255' };
   const separators = { regex: /[()[\]]/, color: 'rgb(200,200,240)' };
   const numbers = { regex: /\d+/, color: 'rgb(230,255,200)' };
   const lists = { regex: /:[A-Za-z]\w*/, color: 'rgb(255,200,120)' };
