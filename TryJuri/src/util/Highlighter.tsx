@@ -52,5 +52,5 @@ function colorized(text: string, color: string) {
 }
 
 function tokenize(text: string) {
-    return text.match(/\w+|\d+|\s|:[A-Za-z]\w*|./g) || [];
+    return text.match(/#.*|\w+|\d+|\s|:[A-Za-z]\w*|./g) || [];
 }

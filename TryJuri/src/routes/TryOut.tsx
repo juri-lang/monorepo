@@ -101,18 +101,20 @@ function Editor({ callback, autoFocus }: editorProps) {
 
 
 function highlight(text: string) {
-  const keywords = { regex: /^(fun|repeat|operator)$/, color: 'rgb(0,200,255' };
+  const keywords = { regex: /^(fun|repeat|operator|init|as|iterate)$/, color: 'rgb(0,200,255' };
   const separators = { regex: /[()[\]]/, color: 'rgb(200,200,240)' };
   const numbers = { regex: /\d+/, color: 'rgb(230,255,200)' };
   const lists = { regex: /:[A-Za-z]\w*/, color: 'rgb(255,200,120)' };
   const operators = { regex: /[+\-*/><.=!%|&]/, color: 'rgb(100,255,255)' };
+  const comments = {regex: /#.*/, color: 'rgb(150,150,150)'}
   const hl = new Highlighter(
     { regex: /if/, color: 'rgb(255,100,80)' },
     keywords,
     separators,
     numbers,
     lists,
-    operators
+    operators,
+    comments
   );
 
   return hl.highlight(text);
