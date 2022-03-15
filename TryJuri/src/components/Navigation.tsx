@@ -85,7 +85,6 @@ export default function Navigation({ children }: { children?: ReactNode }) {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant='h6' fontWeight='bold' color='inherit'><Link href='/' color='inherit' underline='none'>juri-lang</Link></Typography>
-
             </Toolbar>
         </AppBar>
         <Drawer
