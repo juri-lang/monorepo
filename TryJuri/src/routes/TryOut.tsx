@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, SyntheticEvent, useState, ReactNode, useEffect} from 'react';
+import { ChangeEvent, KeyboardEvent, SyntheticEvent, useState, ReactNode, useEffect, useCallback} from 'react';
 import '../style/App.scss';
 import { Button, TextField , CircularProgress} from '@mui/material';
 import { Theme } from '@mui/material';
@@ -29,8 +29,8 @@ export default function TryOut({ theme }: { theme?: Theme }) {
     
     setLoading(true);
     axios.get('https://juri-online-compiler.herokuapp.com/jurii?code=' + encoded)
-    .then(res =>  setOutput(res.data.standard + res.data.error))
-    .catch(err => setOutput(err))
+    .then(res =>  setOutput(output + res.data.standard + res.data.error))
+    .catch(err => setOutput(output + err))
     .finally(() => setLoading(false));
 
     /*axios.get('https://icanhazdadjoke.com/search?term=' + code, { headers: { 'Accept': 'application/json' } })
@@ -43,7 +43,7 @@ export default function TryOut({ theme }: { theme?: Theme }) {
       <h1 style={{ fontSize: '36pt' }}>try juri</h1>
       <div>
         <Editor callback={setCode} />
-        <TextField label='Output' multiline margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' value={output} disabled />
+        <TextField label='Output' multiline margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='25' value={output} disabled />
       </div>
       <Button variant='contained' onClick={handleRun} style={{fontSize:'20px'}}>
         {loading ? <CircularProgress size='1.7em'/> : <><PlayArrowIcon fontSize='large'/>Run</>}</Button>
@@ -56,10 +56,12 @@ declare interface editorProps {
   callback: Function,
   autoFocus?: boolean
 }
+
 function Editor({ callback, autoFocus }: editorProps) {
   
   let [highlighted, setHighlighted] = useState(localStorage.getItem('code') && <>{highlight(localStorage.getItem('code')!)}</>|| <></>);
   let [text, setText] = useState(localStorage.getItem('code') || '');
+  let [scrolling, setScrolling] = useState(0);
   let handleChange = function (event: ChangeEvent<HTMLTextAreaElement>) {
     if (event.target.value !== text) {
       localStorage.setItem('code', event.target.value);
@@ -110,18 +112,30 @@ function Editor({ callback, autoFocus }: editorProps) {
     //t.dispatchEvent(new Event('change'));
     handleChange({target: {name: t.name, value : t.value}} as ChangeEvent<HTMLTextAreaElement>);
   }
+  const handleScroll = useCallback(event => {
+    setScrolling(event.target.scrollTop || 0);
+  }, []);
+
+useEffect(() => {
+  let editor = document.getElementById('editor')!;
+    editor.addEventListener("scroll", handleScroll);
+    return () => {
+        editor.removeEventListener("scroll", handleScroll);
+    };
+}, [handleScroll]);
+
   useEffect(() =>{
 
   },[(document.getElementById('editor') as HTMLTextAreaElement)?.value]);
   return <>
-    <TextField sx={{ color: 'transparent !important' }} id='editor' placeholder='Please enter your code here.' onKeyDown={handleKeyPress} inputProps={{ spellCheck: 'false' }} autoFocus={autoFocus} multiline onChange={handleChange} margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='15' value={text} />
-    <DivOverlay elementID={'editor'}>{highlighted}</DivOverlay>
+    <TextField sx={{ color: 'transparent !important' }} id='editor' placeholder='Please enter your code here.' onScroll={handleScroll} onKeyDown={handleKeyPress} inputProps={{ spellCheck: 'false' }} autoFocus={autoFocus} multiline onChange={handleChange} margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='25' value={text} />
+    <DivOverlay elementID={'editor'} scrolling={scrolling} >{highlighted}</DivOverlay>
   </>
 }
 
 
 function highlight(text: string) {
-  const keywords = { regex: /^(fun|repeat|operator|init|as|iterate|return|break)$/, color: 'rgb(0,200,255' };
+  const keywords = { regex: /^(fun|repeat|operator|init|as|iterate|return|break|then)$/, color: 'rgb(0,200,255' };
   const separators = { regex: /[()[\]]/, color: 'rgb(200,200,240)' };
   const numbers = { regex: /\d+/, color: 'rgb(230,255,200)' };
   const lists = { regex: /:[A-Za-z]\w*/, color: 'rgb(255,200,120)' };
@@ -140,7 +154,7 @@ function highlight(text: string) {
   return hl.highlight(text);
 }
 
-function DivOverlay({ elementID, children}: { elementID: string, children: ReactNode}) {
+function DivOverlay({ elementID, children, scrolling}: { elementID: string, children: ReactNode, scrolling : number}) {
   let [style, setStyle] = useState({
     width: '0',
     height: '0',
@@ -154,7 +168,9 @@ function DivOverlay({ elementID, children}: { elementID: string, children: React
     color: 'white',
     top: 0,
     left: 0,
+    overflowY: 'clip',
     whiteSpace: 'pre-wrap'
+    
   } as CSSProperties);
 
   let updateStyle = function () {
@@ -178,5 +194,6 @@ function DivOverlay({ elementID, children}: { elementID: string, children: React
   useEffect(() => {
     updateStyle();
   }, [(document.getElementById(elementID) && (getComputedStyle(document.getElementById(elementID)!).top, getComputedStyle(document.getElementById(elementID)!).left))]);
-  return <div style={style}>{children}</div>
+
+  return <div style={style}><div className='highlighting' style={{transform : `translateY(${-scrolling}px)`}}>{children}</div></div>
 }
