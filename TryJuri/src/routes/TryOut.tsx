@@ -31,8 +31,13 @@ export default function TryOut({ theme }: { theme?: Theme }) {
     axios.get('https://juri-online-compiler.herokuapp.com/jurii?code=' + encoded)
       .then(res => setOutput(output + res.data.standard + res.data.error))
       .catch(err => setOutput(output + err))
-      .finally(() => setLoading(false));
+      .finally(() =>{
+        setLoading(false)
+        let out = document.getElementById('out')!;
+        out.scrollTop = out?.scrollHeight || 0; 
+      });
 
+    
     /*axios.get('https://icanhazdadjoke.com/search?term=' + code, { headers: { 'Accept': 'application/json' } })
       .then(res => setOutput(res.data.results.map((r: DadJokesResult) => r.joke).join('\n\n')))
       .catch(err => setOutput(err));*/
@@ -43,7 +48,7 @@ export default function TryOut({ theme }: { theme?: Theme }) {
       <h1 style={{ fontSize: '36pt' }}>try juri</h1>
       <div>
         <Editor callback={setCode} />
-        <TextField label='Output' multiline margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='25' value={output} disabled />
+        <TextField id='out' label='Output' multiline margin='normal' variant='outlined' style={{ width: '40%', minWidth: '400px', margin: '2%' }} rows='25' value={output} disabled />
       </div>
       <Button variant='contained' onClick={handleRun} style={{ fontSize: '20px' }}>
         {loading ? <CircularProgress size='1.7em' /> : <><PlayArrowIcon fontSize='large' />Run</>}</Button>
@@ -102,7 +107,7 @@ function Editor({ callback, autoFocus }: editorProps) {
         t.setSelectionRange(cpos + spaces + 1, cpos + spaces + 1);
         break;
       case 'Backspace':
-        if (currentRow().match(/ {4}$/)) {
+        if (t.selectionStart === t.selectionEnd && currentRow().match(/ {4}$/)) {
           event.preventDefault();
           t.value = t.value.slice(0, cpos - 4) + t.value.slice(cpos);
           t.setSelectionRange(cpos - 4, cpos - 4);
