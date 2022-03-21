@@ -1,4 +1,4 @@
-import { Toolbar, IconButton, Typography, Drawer, Divider, List, ListItem, ListItemText } from '@mui/material';
+import { Toolbar, IconButton, Typography, Drawer, Divider, List, ListItem, ListItemText,Link } from '@mui/material';
 import {
     Menu as MenuIcon,
     ChevronLeft as ChevronLeftIcon,
@@ -21,7 +21,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
+
   }));
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -83,8 +84,7 @@ export default function Navigation({ children }: { children?: ReactNode }) {
                 <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2, ...(open && { display: 'none' }) }} onClick={handleDrawerOpen}>
                     <MenuIcon />
                 </IconButton>
-                <Typography variant='h6' fontWeight='bold' color='inherit'>juri-lang</Typography>
-
+                <Typography variant='h6' fontWeight='bold' color='inherit'><Link href='/' color='inherit' underline='none'>juri-lang</Link></Typography>
             </Toolbar>
         </AppBar>
         <Drawer
@@ -101,7 +101,7 @@ export default function Navigation({ children }: { children?: ReactNode }) {
             open={open}
         >
             <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} style={{color:'inherit'}}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
@@ -115,7 +115,7 @@ export default function Navigation({ children }: { children?: ReactNode }) {
         </List>
         </Drawer>
         <DrawerHeader/>
-        <Main open={open}>
+        <Main id='main' open={open}>
             {children}
         </Main>
     </>

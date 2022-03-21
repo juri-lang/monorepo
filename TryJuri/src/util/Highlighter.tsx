@@ -20,7 +20,7 @@ export default class Highlighter {
             let element = <>{token}</>;
             switch (token) {
                 case ' ':
-                    element = <>&nbsp;</>
+                    element = <>{' '}</>
                     break;
                 case '\n':
                     element = <br />;
@@ -52,5 +52,5 @@ function colorized(text: string, color: string) {
 }
 
 function tokenize(text: string) {
-    return text.match(/\w+|\d+|\s|:[A-Za-z]\w*|./g) || [];
+    return text.match(/#.*|\w+|\d+|\s|:[A-Za-z]\w*|./g) || [];
 }
