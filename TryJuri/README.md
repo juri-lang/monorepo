@@ -1,5 +1,6 @@
-# Getting Started with Create React App ![Heroku](https://pyheroku-badge.herokuapp.com/?app=tryjuri&style=plastic)
-
+# Getting Started with Create React App 
+![TryJuri on Heroku](https://pyheroku-badge.herokuapp.com/?app=tryjuri&style=plastic)
+![TryJuri Beta on Heroku](https://pyheroku-badge.herokuapp.com/?app=tryjuribeta&style=plastic)
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
