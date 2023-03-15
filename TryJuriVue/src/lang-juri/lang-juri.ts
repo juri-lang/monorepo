@@ -1,14 +1,14 @@
 import { parser } from './juri.js';
 import { LRLanguage } from '@codemirror/language';
-import { styleTags, tags as t, Tag, HighlightStyle } from '@codemirror/highlight';
 import { LanguageSupport } from '@codemirror/language';
 import { completeFromList } from '@codemirror/autocomplete';
+import { tagHighlighter, Tag, tags, styleTags } from '@lezer/highlight';
 
 const keywords = ['fun', 'repeat', 'iterate', 'init', 'break', 'operator', 'then', 'break'];
-const IF = Tag.define(t.controlKeyword);
-const ListIdentifier = Tag.define(t.variableName);
-const Parameter = Tag.define(t.variableName);
-const LiteralCharList = Tag.define(t.string);
+const IF = Tag.define(tags.controlKeyword);
+const ListIdentifier = Tag.define(tags.variableName);
+const Parameter = Tag.define(tags.variableName);
+const LiteralCharList = Tag.define(tags.string);
 
 const parserWithMetadata = parser.configure({
   props: [
@@ -16,24 +16,24 @@ const parserWithMetadata = parser.configure({
       if: IF,
       ListIdentifier: ListIdentifier,
       LiteralCharList: LiteralCharList,
-      fun: t.keyword,
-      iterate: t.keyword,
-      repeat: t.keyword,
-      break: t.keyword,
-      init: t.keyword,
-      as: t.keyword,
-      to: t.keyword,
-      then: t.keyword,
-      return: t.keyword,
-      skip: t.keyword,
-      cry: t.keyword,
-      operator: t.keyword,
-      Operator: t.operatorKeyword,
-      Identifier: t.name,
+      fun: tags.keyword,
+      iterate: tags.keyword,
+      repeat: tags.keyword,
+      break: tags.keyword,
+      init: tags.keyword,
+      as: tags.keyword,
+      to: tags.keyword,
+      then: tags.keyword,
+      return: tags.keyword,
+      skip: tags.keyword,
+      cry: tags.keyword,
+      operator: tags.keyword,
+      Operator: tags.operatorKeyword,
+      Identifier: tags.name,
       Parameter: Parameter,
-      LineComment: t.lineComment,
-      Number: t.number,
-      '( ) [ ]': t.paren,
+      LineComment: tags.lineComment,
+      Number: tags.number,
+      '( ) [ ]': tags.paren,
     }),
   ],
 });
@@ -65,15 +65,29 @@ export function juri() {
   return new LanguageSupport(juriLang, [autocompletion]);
 }
 
-const highlightStyle = HighlightStyle.define([
+export const juriTagHighlighter = tagHighlighter([
+  {
+    tag: IF,
+    class: 'if',
+  },
+  { tag: ListIdentifier, class: 'listIdentifier' },
+  { tag: LiteralCharList, class: 'literalCharList' },
+  { tag: Parameter, class: 'parameter' },
+  { tag: tags.number, class: 'number' },
+  { tag: tags.operator, class: 'operator' },
+  { tag: tags.keyword, class: 'keyword' },
+  { tag: tags.paren, class: 'parenthesis' },
+  { tag: tags.comment, class: 'comment' },
+]);
+
+export const highlightStyle = [
   { tag: IF, color: '#FF6450' },
   { tag: ListIdentifier, color: '#FFC878' },
   { tag: LiteralCharList, color: 'aa5500' },
   { tag: Parameter, color: '#cfc' },
-  { tag: t.number, color: '#efa' },
-  { tag: t.operator, color: '#64FFFF' },
-  { tag: t.keyword, color: '#00C8FF' },
-  { tag: t.paren, color: '#bbf' },
-  { tag: t.comment, color: '#969696', fontStyle: 'italic' },
-]);
-export { highlightStyle };
+  { tag: tags.number, color: '#efa' },
+  { tag: tags.operator, color: '#64FFFF' },
+  { tag: tags.keyword, color: '#00C8FF' },
+  { tag: tags.paren, color: '#bbf' },
+  { tag: tags.comment, color: '#969696', fontStyle: 'italic' },
+];
