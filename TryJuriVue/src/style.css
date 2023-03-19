@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'JetBrains Mono Regular';
+  src: local('JetBrains Mono Regular'), url(./fonts/JetBrainsMono-Regular.woff2) format('woff2');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+body {
+  font-family: 'JetBrains Mono Regular';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(16,16,20);
+}
+
