@@ -1,0 +1,28 @@
+.if {
+    color: #FF6450;
+}
+.listIdentifier {
+    color: #FFC878;
+}
+.literalCharList {
+    color: #aa5500;
+}
+.parameter {
+    color: #cfc;
+}
+.number {
+    color: #efa;
+}
+.operator {
+    color: #64FFFF;
+}
+.keyword {
+    color: #00C8FF;
+}
+.parenthesis {
+    color: #bbf;
+}
+.comment {
+    color: #969696;
+    font-style: italic;
+}
