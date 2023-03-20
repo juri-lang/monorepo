@@ -17,6 +17,17 @@ const sideMenuOptions = [
       ),
     key: 'home',
   },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: '/readme',
+        },
+        { default: () => 'ReadMe' },
+      ),
+    key: 'readme',
+  },
 ];
 </script>
 
