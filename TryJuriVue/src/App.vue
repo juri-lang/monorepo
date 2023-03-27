@@ -28,12 +28,23 @@ const sideMenuOptions = [
       ),
     key: 'readme',
   },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: '/examples',
+        },
+        { default: () => 'Examples' },
+      ),
+    key: 'examples',
+  },
 ];
 </script>
 
 <template>
   <n-config-provider :theme="darkTheme">
-    <n-layout>
+    <n-layout position="static">
       <n-layout-header
         position="static"
         style="
