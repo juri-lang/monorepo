@@ -19,10 +19,10 @@
 import { EditorView } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 import { ref, shallowRef } from 'vue';
-import { juri, juriTagHighlighter } from '../lang-juri/lang-juri';
+import { juri, juriTagHighlighter } from '../../lang-juri/lang-juri';
 import { Codemirror } from 'vue-codemirror';
 import { syntaxHighlighting } from '@codemirror/language';
-import '../lang-juri/juri-highlight.css';
+import '../../lang-juri/juri-highlight.css';
 
 const code = ref(localStorage.getItem('code') || '');
 
@@ -44,7 +44,6 @@ const theme = EditorView.theme({
   },
   '&.cm-editor': {
     backgroundColor: 'rgba(255,255,255,0.02)',
-    borderRadius: '10px',
   },
   '.cm-cursor': {
     borderLeftColor: '#0f0',

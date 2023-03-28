@@ -25,6 +25,6 @@
 
 <script setup lang="ts">
 import { NButton } from 'naive-ui';
-import Editor from '../components/Juri-Editor.vue';
+import Editor from '../components/editor/EditorComponent.vue';
 import JuriHeader from '../components/JuriHeader.vue';
 </script>
