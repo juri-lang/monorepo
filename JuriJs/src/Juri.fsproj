@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ParserCombinators.fs" />
+    <Compile Include="LanguageModel.fs" />
+    <Compile Include="JuriOutput.fs" />
+    <Compile Include="JuriOutputWriter.fs" />
+    <Compile Include="Runtime.fs" />
+    <Compile Include="CoreLib.fs" />
+    <Compile Include="Interpreter.fs" />
+    <Compile Include="Parser.fs" />
+    <Compile Include="JuriInterpreter.fs" />
+    <Compile Include="App.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" Version="3.2.3" />
+    <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
+  </ItemGroup>
+</Project>
